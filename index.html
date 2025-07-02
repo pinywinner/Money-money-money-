@@ -238,6 +238,29 @@
             <!-- מסך ניווט (Navigation Screen) – יומן טרנזקציות - קלט הנתונים המרכזי -->
             <div class="section-card flex-grow">
                 <h2 class="text-xl font-semibold mb-4 text-green-300">מסך ניווט: יומן טרנזקציות</h2>
+                <!-- פילטרים וחיפוש -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <select id="filter-type" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
+                        <option value="all">כל הסוגים</option>
+                        <option value="expense">הוצאה</option>
+                        <option value="income">הכנסה</option>
+                    </select>
+                    <select id="filter-category" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
+                        <option value="all">כל הקטגוריות</option>
+                        <!-- Categories will be populated by JS -->
+                    </select>
+                    <input type="date" id="filter-start-date" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
+                    <input type="date" id="filter-end-date" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
+                    <input type="text" id="search-description" placeholder="חפש תיאור..." class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm flex-grow">
+                </div>
+                <!-- כפתורי מיון -->
+                <div class="flex gap-2 mb-4">
+                    <button id="sort-date-desc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-numeric-down-alt ml-1"></i> תאריך (חדש)</button>
+                    <button id="sort-date-asc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-numeric-up-alt ml-1"></i> תאריך (ישן)</button>
+                    <button id="sort-amount-desc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-amount-down-alt ml-1"></i> סכום (גבוה)</button>
+                    <button id="sort-amount-asc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-amount-up-alt ml-1"></i> סכום (נמוך)</button>
+                </div>
+
                 <div class="flex justify-between items-center mb-4">
                     <button id="add-expense-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
                         <i class="fas fa-minus-circle ml-2"></i> הוסף הוצאה
@@ -252,6 +275,29 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-3">
                     <i class="fas fa-info-circle ml-1"></i> כאן מתועדות כל ה"הקפות" הפיננסיות שלכם.
+                </p>
+            </div>
+
+            <!-- ניתוח הוצאות: "מסלול ההוצאות" -->
+            <div class="section-card">
+                <h2 class="text-xl font-semibold mb-4 text-orange-300">ניתוח הוצאות: מסלול ההוצאות שלך</h2>
+                <div id="expense-analysis-section" class="space-y-4">
+                    <h3 class="text-md font-semibold text-gray-300 mb-2">התפלגות הוצאות חודשית:</h3>
+                    <div id="expense-pie-chart" class="w-full h-48 bg-gray-800 rounded-md flex items-center justify-center text-gray-500">
+                        <!-- Placeholder for Pie Chart -->
+                        גרף התפלגות הוצאות (פיתוח עתידי)
+                    </div>
+                    <h3 class="text-md font-semibold text-gray-300 mb-2 mt-4">הוצאות חוזרות/מנויים:</h3>
+                    <div id="recurring-expenses-list" class="space-y-2">
+                        <p class="text-gray-500 text-sm">אין הוצאות חוזרות מוגדרות.</p>
+                        <!-- Recurring expenses will be listed here -->
+                    </div>
+                    <button id="check-saving-opportunities-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg w-full mt-4 transition duration-300 transform hover:scale-105">
+                        <i class="fas fa-lightbulb ml-2"></i> בדוק הזדמנויות חיסכון!
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> ניתוח מעמיק של דפוסי ההוצאות שלך.
                 </p>
             </div>
 
@@ -390,4 +436,1041 @@
     </div>
 
     <!-- מודאל פרופיל נהג -->
-    <di
+    <div id="driver-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-driver-profile-modal-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-6 text-center text-purple-300">פרופיל נהג</h3>
+            <p class="text-gray-400 text-center mb-4">
+                <i class="fas fa-user-circle ml-1"></i> הגדר את סגנון הנהיגה הפיננסי שלך.
+            </p>
+            <form id="driver-profile-form" class="space-y-4">
+                <div>
+                    <label for="driver-type" class="block text-gray-300 text-sm font-bold mb-2">סוג נהג (מנטליות):</label>
+                    <select id="driver-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
+                        <option value="זהיר">זהיר (מעדיף יציבות)</option>
+                        <option value="אגרסיבי">אגרסיבי (מוכן לסיכון מחושב)</option>
+                        <option value="ממוקד">ממוקד (יעדים ברורים)</option>
+                        <option value="מתלבט">מתלבט (זקוק ליותר הכוונה)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="preferred-tool" class="block text-gray-300 text-sm font-bold mb-2">כלי מועדף למעקב:</label>
+                    <select id="preferred-tool" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
+                        <option value="אפליקציה">אפליקציה (כמו זו)</option>
+                        <option value="טבלה">טבלה (גיליון אלקטרוני)</option>
+                        <option value="וואטסאפ">וואטסאפ (תזכורות)</option>
+                        <option value="יועץ">יועץ פיננסי</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="review-frequency" class="block text-gray-300 text-sm font-bold mb-2">תדירות סקירת הוצאות:</label>
+                    <select id="review-frequency" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
+                        <option value="יומי">יומי</option>
+                        <option value="שבועי">שבועי</option>
+                        <option value="דו-שבועי">דו-שבועי</option>
+                        <option value="חודשי">חודשי</option>
+                    </select>
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-save ml-2"></i> שמור פרופיל
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- מודאל הגדרת יעד פיננסי -->
+    <div id="goal-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-goal-modal-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-6 text-center text-pink-300">הגדר יעד פיננסי חדש</h3>
+            <form id="goal-form" class="space-y-4">
+                <div>
+                    <label for="goal-name" class="block text-gray-300 text-sm font-bold mb-2">שם היעד:</label>
+                    <input type="text" id="goal-name" placeholder="קרן חירום / חופשה לחו'ל" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" required>
+                </div>
+                <div>
+                    <label for="goal-amount" class="block text-gray-300 text-sm font-bold mb-2">סכום יעד:</label>
+                    <input type="number" id="goal-amount" placeholder="10000" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" step="0.01" required>
+                </div>
+                <div>
+                    <label for="goal-saved" class="block text-gray-300 text-sm font-bold mb-2">סכום שכבר נחסך:</label>
+                    <input type="number" id="goal-saved" placeholder="0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" step="0.01">
+                </div>
+                <div>
+                    <label for="goal-due-date" class="block text-gray-300 text-sm font-bold mb-2">תאריך יעד:</label>
+                    <input type="date" id="goal-due-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-save ml-2"></i> שמור יעד
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Global Data & State ---
+        let transactions = []; // List of transactions (expenses/income)
+        let monthlyBudget = 0; // Total monthly budget
+        let categoryBudgets = { // Budget for each category
+            "מזון": 0,
+            "דיור": 0,
+            "תחבורה": 0,
+            "בילויים": 0,
+            "חינוך": 0,
+            "בריאות": 0,
+            "אחר": 0
+        };
+        let financialGoals = []; // Financial goals
+        let driverProfile = { // Driver profile
+            type: 'זהיר',
+            preferredTool: 'אפליקציה',
+            reviewFrequency: 'שבועי' // New: Expense review frequency
+        };
+        let driverPoints = 0; // Driver points for gamification
+        let earnedBadges = []; // Earned badges
+
+        const categories = ["מזון", "דיור", "תחבורה", "בילויים", "חינוך", "בריאות", "אחר"];
+        const allBadges = [
+            { id: 'first_transaction', name: 'נהג מתחיל', icon: 'fa-flag-checkered', description: 'הזנת טרנזקציה ראשונה' },
+            { id: 'budget_setter', name: 'מתכנן מסלול', icon: 'fa-chart-line', description: 'הגדרת תקציב חודשי' },
+            { id: 'first_goal', name: 'מציב יעדים', icon: 'fa-bullseye', description: 'הגדרת יעד פיננסי ראשון' },
+            { id: 'consistent_week', name: 'נהיגה עקבית', icon: 'fa-calendar-check', description: 'עדכון הוצאות במשך שבוע רצוף' },
+            { id: 'budget_master', name: 'אלוף התקציב', icon: 'fa-trophy', description: 'עמידה בתקציב חודשי' },
+            { id: 'saving_champion', name: 'אלוף חיסכון', icon: 'fa-piggy-bank', description: 'השגת יעד חיסכון' }
+        ];
+
+        // --- DOM Elements ---
+        const speedometerNeedle = document.getElementById('speedometer-needle');
+        const budgetUtilizationPercent = document.getElementById('budget-utilization-percent');
+        const remainingBudgetEl = document.getElementById('remaining-budget');
+        const categoryGaugesContainer = document.getElementById('category-gauges');
+        const transactionsList = document.getElementById('transactions-list');
+        const noTransactionsMessage = document.getElementById('no-transactions-message');
+        const pitStopMessages = document.getElementById('pit-stop-messages');
+        const monthlyIncomeEl = document.getElementById('monthly-income');
+        const monthlyExpensesEl = document.getElementById('monthly-expenses');
+        const incomeExpenseBar = document.getElementById('income-expense-bar');
+        const incomeExpenseRatio = document.getElementById('income-expense-ratio');
+        const financialGoalsContainer = document.getElementById('financial-goals');
+        const noGoalsMessage = document.getElementById('no-goals-message');
+        const driverPointsEl = document.getElementById('driver-points');
+        const badgesContainer = document.getElementById('badges-container');
+        const noBadgesMessage = document.getElementById('no-badges-message');
+        const activeChallengesContainer = document.getElementById('active-challenges');
+
+        // New elements for expense management
+        const filterTypeSelect = document.getElementById('filter-type');
+        const filterCategorySelect = document.getElementById('filter-category');
+        const filterStartDateInput = document.getElementById('filter-start-date');
+        const filterEndDateInput = document.getElementById('filter-end-date');
+        const searchDescriptionInput = document.getElementById('search-description');
+        const sortDateDescBtn = document.getElementById('sort-date-desc');
+        const sortDateAscBtn = document.getElementById('sort-date-asc');
+        const sortAmountDescBtn = document.getElementById('sort-amount-desc');
+        const sortAmountAscBtn = document.getElementById('sort-amount-asc');
+        const expenseAnalysisSection = document.getElementById('expense-analysis-section');
+        const recurringExpensesList = document.getElementById('recurring-expenses-list');
+        const checkSavingOpportunitiesBtn = document.getElementById('check-saving-opportunities-btn');
+
+        // Modals
+        const transactionModal = document.getElementById('transaction-modal');
+        const budgetModal = document.getElementById('budget-modal');
+        const driverProfileModal = document.getElementById('driver-profile-modal');
+        const goalModal = document.getElementById('goal-modal');
+
+        // Modal close buttons
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const closeBudgetModalBtn = document.getElementById('close-budget-modal-btn');
+        const closeDriverProfileModalBtn = document.getElementById('close-driver-profile-modal-btn');
+        const closeGoalModalBtn = document.getElementById('close-goal-modal-btn');
+
+        // Action buttons
+        const addExpenseBtn = document.getElementById('add-expense-btn');
+        const addIncomeBtn = document.getElementById('add-income-btn');
+        const setBudgetBtn = document.getElementById('set-budget-btn');
+        const driverProfileBtn = document.getElementById('driver-profile-btn');
+        const addGoalBtn = document.getElementById('add-goal-btn');
+
+        // Forms
+        const transactionForm = document.getElementById('transaction-form');
+        const budgetForm = document.getElementById('budget-form');
+        const driverProfileForm = document.getElementById('driver-profile-form');
+        const goalForm = document.getElementById('goal-form');
+
+        // Form/Modal specific elements
+        const modalTitle = document.getElementById('modal-title');
+        const transactionTypeSelect = document.getElementById('transaction-type');
+        const transactionCategorySelect = document.getElementById('transaction-category');
+        const categoryBudgetInputsContainer = document.getElementById('category-budget-inputs');
+        const driverTypeSelect = document.getElementById('driver-type');
+        const preferredToolSelect = document.getElementById('preferred-tool');
+        const reviewFrequencySelect = document.getElementById('review-frequency'); // New
+
+
+        // --- Utility Functions ---
+
+        /**
+         * Formats a number as currency in Israeli Shekels.
+         * @param {number} amount
+         * @returns {string} Formatted currency string.
+         */
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount);
+        }
+
+        /**
+         * Calculates total expenses for the current month.
+         * @returns {number} Total expenses.
+         */
+        function calculateMonthlyExpenses() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            return transactions.filter(t =>
+                t.type === 'expense' &&
+                new Date(t.date).getMonth() === currentMonth &&
+                new Date(t.date).getFullYear() === currentYear
+            ).reduce((sum, t) => sum + t.amount, 0);
+        }
+
+        /**
+         * Calculates total income for the current month.
+         * @returns {number} Total income.
+         */
+        function calculateMonthlyIncome() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            return transactions.filter(t =>
+                t.type === 'income' &&
+                new Date(t.date).getMonth() === currentMonth &&
+                new Date(t.date).getFullYear() === currentYear
+            ).reduce((sum, t) => sum + t.amount, 0);
+        }
+
+        /**
+         * Calculates expenses per category for the current month.
+         * @returns {Object} Object with category expenses.
+         */
+        function calculateCategoryExpenses() {
+            const categoryExp = {};
+            categories.forEach(cat => categoryExp[cat] = 0);
+
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            transactions.filter(t =>
+                t.type === 'expense' &&
+                new Date(t.date).getMonth() === currentMonth &&
+                new Date(t.date).getFullYear() === currentYear
+            ).forEach(t => {
+                if (categoryExp[t.category] !== undefined) {
+                    categoryExp[t.category] += t.amount;
+                }
+            });
+            return categoryExp;
+        }
+
+        /**
+         * Filters and sorts transactions based on current filter/sort settings.
+         * @returns {Array} Filtered and sorted transactions.
+         */
+        function getFilteredAndSortedTransactions() {
+            let filtered = [...transactions];
+
+            // Filter by type
+            const filterType = filterTypeSelect.value;
+            if (filterType !== 'all') {
+                filtered = filtered.filter(t => t.type === filterType);
+            }
+
+            // Filter by category
+            const filterCategory = filterCategorySelect.value;
+            if (filterCategory !== 'all') {
+                filtered = filtered.filter(t => t.category === filterCategory);
+            }
+
+            // Filter by date range
+            const startDate = filterStartDateInput.value;
+            const endDate = filterEndDateInput.value;
+            if (startDate) {
+                filtered = filtered.filter(t => new Date(t.date) >= new Date(startDate));
+            }
+            if (endDate) {
+                filtered = filtered.filter(t => new Date(t.date) <= new Date(endDate));
+            }
+
+            // Search by description
+            const searchTerm = searchDescriptionInput.value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(t => t.description.toLowerCase().includes(searchTerm));
+            }
+
+            // Sort
+            const sortByDateDesc = sortDateDescBtn.classList.contains('bg-blue-800');
+            const sortByDateAsc = sortDateAscBtn.classList.contains('bg-blue-800');
+            const sortByAmountDesc = sortAmountDescBtn.classList.contains('bg-blue-800');
+            const sortByAmountAsc = sortAmountAscBtn.classList.contains('bg-blue-800');
+
+            if (sortByDateDesc) {
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortByDateAsc) {
+                filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else if (sortByAmountDesc) {
+                filtered.sort((a, b) => b.amount - a.amount);
+            } else if (sortByAmountAsc) {
+                filtered.sort((a, b) => a.amount - b.amount);
+            } else {
+                // Default sort by date descending if no sort button is active
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+
+            return filtered;
+        }
+
+
+        // --- Dashboard Update Functions ---
+
+        /**
+         * Updates the speedometer and remaining budget display.
+         */
+        function updateSpeedometer() {
+            const totalExpenses = calculateMonthlyExpenses();
+            const utilization = monthlyBudget > 0 ? (totalExpenses / monthlyBudget) * 100 : 0;
+            const remaining = monthlyBudget - totalExpenses;
+
+            budgetUtilizationPercent.textContent = `${Math.round(utilization)}%`;
+            remainingBudgetEl.textContent = formatCurrency(remaining);
+            remainingBudgetEl.className = remaining >= 0 ? 'text-green-400' : 'text-red-400';
+
+            // Rotate needle: 0% = -135deg (start), 100% = 135deg (end)
+            // Range is 270 degrees.
+            const rotation = Math.min(Math.max(utilization, 0), 100) * 2.7 - 135; // Scale 0-100 to -135 to 135
+            speedometerNeedle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+
+            // Update gauge colors
+            const gaugeElement = document.querySelector('.speedometer-gauge');
+            let gradientStops = '';
+
+            if (utilization <= 50) {
+                const currentGreenEnd = (utilization / 100) * 270 - 135;
+                gradientStops = `#28a745 -135deg, #28a745 ${currentGreenEnd}deg, transparent ${currentGreenEnd}deg`;
+            } else if (utilization <= 80) {
+                const currentYellowEnd = (utilization / 100) * 270 - 135;
+                gradientStops = `#28a745 -135deg, #28a745 0deg, #ffc107 0deg, #ffc107 ${currentYellowEnd}deg, transparent ${currentYellowEnd}deg`;
+            } else {
+                const currentRedEnd = (utilization / 100) * 270 - 135;
+                gradientStops = `#28a745 -135deg, #28a745 0deg, #ffc107 0deg, #ffc107 81deg, #dc3545 81deg, #dc3545 ${currentRedEnd}deg, transparent ${currentRedEnd}deg`;
+            }
+            gaugeElement.style.background = `conic-gradient(from -135deg, ${gradientStops})`;
+        }
+
+
+        /**
+         * Updates the category fuel gauges.
+         */
+        function updateCategoryGauges() {
+            categoryGaugesContainer.innerHTML = '';
+            const categoryExpenses = calculateCategoryExpenses();
+
+            categories.forEach(cat => {
+                const budget = categoryBudgets[cat] || 0;
+                const spent = categoryExpenses[cat] || 0;
+                const percentage = budget > 0 ? (spent / budget) * 100 : 0;
+                const remaining = budget - spent;
+
+                let progressBarColorClass = 'bg-green-500';
+                if (percentage > 80) {
+                    progressBarColorClass = 'bg-red-500';
+                } else if (percentage > 50) {
+                    progressBarColorClass = 'bg-yellow-500';
+                }
+
+                const gaugeHtml = `
+                    <div class="flex flex-col">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300 text-sm">${cat}:</span>
+                            <span class="text-sm font-medium">${formatCurrency(spent)} / ${formatCurrency(budget)}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill ${progressBarColorClass}" style="width: ${Math.min(percentage, 100)}%;"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 text-left">נותר: ${formatCurrency(remaining)}</p>
+                    </div>
+                `;
+                categoryGaugesContainer.insertAdjacentHTML('beforeend', gaugeHtml);
+            });
+        }
+
+        /**
+         * Renders the list of transactions with filters and sorting.
+         */
+        function renderTransactions() {
+            const displayedTransactions = getFilteredAndSortedTransactions();
+            transactionsList.innerHTML = '';
+
+            if (displayedTransactions.length === 0) {
+                noTransactionsMessage.style.display = 'block';
+                return;
+            }
+            noTransactionsMessage.style.display = 'none';
+
+            displayedTransactions.forEach((t, index) => {
+                const isExpense = t.type === 'expense';
+                const amountClass = isExpense ? 'text-red-400' : 'text-green-400';
+                const iconClass = isExpense ? 'fas fa-minus-circle' : 'fas fa-plus-circle';
+
+                // Check for unusual expenses (simplified logic: > 2x average for category)
+                const categoryAvg = calculateCategoryAverage(t.category);
+                const isUnusual = isExpense && categoryAvg > 0 && t.amount > (categoryAvg * 2);
+                const unusualClass = isUnusual ? 'border-r-4 border-yellow-500' : ''; // Highlight unusual
+
+                const transactionHtml = `
+                    <div class="flex items-center justify-between p-3 border-b border-gray-700 last:border-b-0 ${unusualClass}">
+                        <div class="flex items-center flex-grow cursor-pointer edit-transaction-btn" data-original-index="${transactions.indexOf(t)}">
+                            <i class="${iconClass} ${amountClass} text-lg ml-3"></i>
+                            <div>
+                                <p class="text-gray-200 font-medium">${t.description}</p>
+                                <p class="text-gray-400 text-sm">${new Date(t.date).toLocaleDateString('he-IL')} | ${t.category ? t.category : 'הכנסה'}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="${amountClass} font-bold text-lg">${formatCurrency(t.amount)}</span>
+                            <button data-original-index="${transactions.indexOf(t)}" class="delete-transaction-btn text-gray-500 hover:text-red-500 mr-3 transition duration-200">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                transactionsList.insertAdjacentHTML('beforeend', transactionHtml);
+            });
+
+            // Attach event listeners to delete buttons
+            document.querySelectorAll('.delete-transaction-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const originalIndex = parseInt(e.currentTarget.dataset.originalIndex);
+                    if (originalIndex > -1) {
+                        transactions.splice(originalIndex, 1);
+                        addDriverPoints(-5); // Remove points for deleting a transaction
+                        saveData();
+                        updateDashboard();
+                        addPitStopMessage('טרנזקציה נמחקה. זכרו, כל נתון חשוב למרוץ!', 'info');
+                    }
+                });
+            });
+
+            // Attach event listeners for quick edit
+            document.querySelectorAll('.edit-transaction-btn').forEach(element => {
+                element.addEventListener('click', (e) => {
+                    const originalIndex = parseInt(e.currentTarget.dataset.originalIndex);
+                    const transactionToEdit = transactions[originalIndex];
+
+                    // Populate modal with transaction data
+                    document.getElementById('modal-title').textContent = 'ערוך טרנזקציה';
+                    transactionTypeSelect.value = transactionToEdit.type;
+                    document.getElementById('transaction-description').value = transactionToEdit.description;
+                    document.getElementById('transaction-amount').value = transactionToEdit.amount;
+                    transactionCategorySelect.value = transactionToEdit.category;
+                    document.getElementById('transaction-date').value = transactionToEdit.date;
+
+                    if (transactionToEdit.type === 'expense') {
+                        transactionCategorySelect.closest('div').style.display = 'block';
+                    } else {
+                        transactionCategorySelect.closest('div').style.display = 'none';
+                    }
+
+                    // Store original index for saving changes
+                    transactionForm.dataset.editIndex = originalIndex;
+                    openModal(transactionModal);
+                });
+            });
+        }
+
+        /**
+         * Calculates the average expense for a given category.
+         * @param {string} category
+         * @returns {number} Average expense.
+         */
+        function calculateCategoryAverage(category) {
+            const categoryTransactions = transactions.filter(t => t.type === 'expense' && t.category === category);
+            if (categoryTransactions.length === 0) return 0;
+            const total = categoryTransactions.reduce((sum, t) => sum + t.amount, 0);
+            return total / categoryTransactions.length;
+        }
+
+
+        /**
+         * Updates the performance summary section (monthly income/expenses).
+         */
+        function updatePerformanceSummary() {
+            const totalIncome = calculateMonthlyIncome();
+            const totalExpenses = calculateMonthlyExpenses();
+            const ratio = totalIncome > 0 ? (totalExpenses / totalIncome) * 100 : 0;
+
+            monthlyIncomeEl.textContent = formatCurrency(totalIncome);
+            monthlyExpensesEl.textContent = formatCurrency(totalExpenses);
+
+            const barWidth = Math.min(ratio, 100); // Cap at 100% for visual bar
+            incomeExpenseBar.style.width = `${barWidth}%`;
+            incomeExpenseBar.style.backgroundColor = ratio <= 80 ? '#28a745' : (ratio <= 100 ? '#ffc107' : '#dc3545');
+
+            incomeExpenseRatio.textContent = `הוצאות / הכנסות: ${Math.round(ratio)}%`;
+        }
+
+        /**
+         * Renders financial goals.
+         */
+        function renderFinancialGoals() {
+            financialGoalsContainer.innerHTML = '';
+            if (financialGoals.length === 0) {
+                noGoalsMessage.style.display = 'block';
+                return;
+            }
+            noGoalsMessage.style.display = 'none';
+
+            financialGoals.forEach((goal, index) => {
+                const progress = goal.targetAmount > 0 ? (goal.savedAmount / goal.targetAmount) * 100 : 0;
+                const remainingToSave = goal.targetAmount - goal.savedAmount;
+
+                let progressBarColorClass = 'bg-blue-500';
+                if (progress >= 100) {
+                    progressBarColorClass = 'bg-green-500';
+                    if (!earnedBadges.some(b => b.id === 'saving_champion')) {
+                        earnBadge('saving_champion');
+                        addPitStopMessage(`כל הכבוד! השגת את יעד החיסכון "${goal.name}"! זכית בתג "אלוף חיסכון"!`, 'success');
+                    }
+                } else if (progress > 75) {
+                    progressBarColorClass = 'bg-yellow-500';
+                }
+
+                const goalHtml = `
+                    <div class="flex flex-col p-3 border border-gray-700 rounded-md">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-200 font-medium">${goal.name}</span>
+                            <span class="text-sm text-gray-400">${formatCurrency(goal.savedAmount)} / ${formatCurrency(goal.targetAmount)}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill ${progressBarColorClass}" style="width: ${Math.min(progress, 100)}%;"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 text-left">
+                            נותר לחסוך: ${formatCurrency(remainingToSave)} ${goal.dueDate ? ` | תאריך יעד: ${new Date(goal.dueDate).toLocaleDateString('he-IL')}` : ''}
+                        </p>
+                        <button data-index="${index}" class="update-goal-progress-btn bg-blue-500 hover:bg-blue-600 text-white text-xs py-1 px-2 rounded-md mt-2 self-start transition duration-300">
+                            עדכן התקדמות
+                        </button>
+                    </div>
+                `;
+                financialGoalsContainer.insertAdjacentHTML('beforeend', goalHtml);
+            });
+
+            document.querySelectorAll('.update-goal-progress-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.dataset.index);
+                    const goal = financialGoals[index];
+                    const amountToAdd = parseFloat(prompt(`כמה כסף הוספת ליעד "${goal.name}"?`));
+                    if (!isNaN(amountToAdd) && amountToAdd > 0) {
+                        goal.savedAmount += amountToAdd;
+                        saveData();
+                        updateDashboard();
+                        addPitStopMessage(`התקדמות עודכנה ליעד "${goal.name}"!`, 'success');
+                    } else if (amountToAdd !== null) { // If user didn't cancel prompt
+                        addPitStopMessage('הסכום חייב להיות מספר חיובי.', 'error');
+                    }
+                });
+            });
+        }
+
+        /**
+         * Updates driver points and earned badges.
+         */
+        function updateGamification() {
+            driverPointsEl.textContent = driverPoints;
+            badgesContainer.innerHTML = '';
+            if (earnedBadges.length === 0) {
+                noBadgesMessage.style.display = 'block';
+            } else {
+                noBadgesMessage.style.display = 'none';
+                earnedBadges.forEach(badge => {
+                    const badgeHtml = `
+                        <span class="badge">
+                            <i class="fas ${badge.icon} ml-1"></i> ${badge.name}
+                        </span>
+                    `;
+                    badgesContainer.insertAdjacentHTML('beforeend', badgeHtml);
+                });
+            }
+        }
+
+        /**
+         * Awards a badge to the user.
+         * @param {string} badgeId The ID of the badge.
+         */
+        function earnBadge(badgeId) {
+            const badge = allBadges.find(b => b.id === badgeId);
+            if (badge && !earnedBadges.some(b => b.id === badgeId)) {
+                earnedBadges.push(badge);
+                addDriverPoints(50); // Points for earning a badge
+                saveData();
+                updateGamification();
+                addPitStopMessage(`🎉 זכית בתג חדש: "${badge.name}"!`, 'success');
+            }
+        }
+
+        /**
+         * Adds/removes driver points.
+         * @param {number} points Amount of points to add/remove.
+         */
+        function addDriverPoints(points) {
+            driverPoints += points;
+            if (driverPoints < 0) driverPoints = 0; // Ensure points don't go negative
+            saveData();
+            updateGamification();
+        }
+
+        /**
+         * Adds a pit stop message to the dashboard.
+         * @param {string} message The message to display.
+         * @param {string} type 'info', 'warning', 'error', 'success'
+         * @param {string} syllabusLink (optional) Link to relevant syllabus lesson.
+         */
+        function addPitStopMessage(message, type = 'info', syllabusLink = '#') {
+            let bgColor = 'bg-blue-900/30';
+            let borderColor = 'border-blue-700/50';
+            let icon = 'fas fa-info-circle';
+            let iconColor = 'text-blue-400';
+
+            if (type === 'warning') {
+                bgColor = 'bg-yellow-900/30';
+                borderColor = 'border-yellow-700/50';
+                icon = 'fas fa-exclamation-triangle';
+                iconColor = 'text-yellow-400';
+            } else if (type === 'error') {
+                bgColor = 'bg-red-900/30';
+                borderColor = 'border-red-700/50';
+                icon = 'fas fa-exclamation-circle';
+                iconColor = 'text-red-400';
+            } else if (type === 'success') {
+                bgColor = 'bg-green-900/30';
+                borderColor = 'border-green-700/50';
+                icon = 'fas fa-check-circle';
+                iconColor = 'text-green-400';
+            }
+
+            const messageHtml = `
+                <div class="${bgColor} ${borderColor} border p-3 rounded-md flex items-center">
+                    <i class="${icon} ${iconColor} ml-2"></i>
+                    <p class="text-sm">${message}
+                        <a href="${syllabusLink}" target="_blank" class="text-blue-400 hover:underline mr-1">(למד עוד)</a>
+                    </p>
+                </div>
+            `;
+            pitStopMessages.insertAdjacentHTML('afterbegin', messageHtml); // Add to top
+            // Optionally, remove old messages to keep it clean
+            if (pitStopMessages.children.length > 5) {
+                pitStopMessages.lastChild.remove();
+            }
+        }
+
+        /**
+         * Updates all dashboard components.
+         */
+        function updateDashboard() {
+            updateSpeedometer();
+            updateCategoryGauges();
+            renderTransactions(); // This now uses filters/sort
+            updatePerformanceSummary();
+            renderFinancialGoals();
+            updateGamification();
+            checkBudgetAlerts(); // Check for alerts after updating
+            updateExpenseAnalysis(); // New: Update expense analysis section
+        }
+
+        /**
+         * Updates the expense analysis section.
+         */
+        function updateExpenseAnalysis() {
+            // Placeholder for actual chart rendering (e.g., using Chart.js or D3.js)
+            const pieChartDiv = document.getElementById('expense-pie-chart');
+            const categoryExp = calculateCategoryExpenses();
+            let chartData = [];
+            for (const cat in categoryExp) {
+                if (categoryExp[cat] > 0) {
+                    chartData.push(`${cat}: ${formatCurrency(categoryExp[cat])}`);
+                }
+            }
+            if (chartData.length > 0) {
+                pieChartDiv.innerHTML = `<ul class="text-xs text-gray-400 text-right">${chartData.map(item => `<li>${item}</li>`).join('')}</ul>`;
+            } else {
+                pieChartDiv.innerHTML = `אין הוצאות להצגה בגרף.`;
+            }
+
+
+            // Simplified recurring expenses logic (for demo)
+            // In a real app, you'd have a flag on transactions for 'recurring'
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const recurring = transactions.filter(t =>
+                t.type === 'expense' &&
+                t.description.toLowerCase().includes('מנוי') && // Simple keyword check
+                new Date(t.date).getMonth() === currentMonth &&
+                new Date(t.date).getFullYear() === currentYear
+            );
+
+            recurringExpensesList.innerHTML = '';
+            if (recurring.length > 0) {
+                recurring.forEach(t => {
+                    recurringExpensesList.insertAdjacentHTML('beforeend', `
+                        <div class="bg-gray-800/50 p-2 rounded-md flex justify-between items-center text-sm">
+                            <span>${t.description}</span>
+                            <span class="text-red-400">${formatCurrency(t.amount)}</span>
+                        </div>
+                    `);
+                });
+            } else {
+                recurringExpensesList.innerHTML = `<p class="text-gray-500 text-sm">אין הוצאות חוזרות מוגדרות.</p>`;
+            }
+        }
+
+
+        /**
+         * Checks budget utilization and adds alerts if necessary.
+         */
+        function checkBudgetAlerts() {
+            // Clear previous alerts to avoid duplication, but keep general info messages
+            const currentMessages = Array.from(pitStopMessages.children);
+            currentMessages.filter(el => !el.textContent.includes('ברוך הבא') && !el.textContent.includes('פיתוח')).forEach(el => el.remove());
+
+
+            const totalExpenses = calculateMonthlyExpenses();
+            const utilization = monthlyBudget > 0 ? (totalExpenses / monthlyBudget) * 100 : 0;
+
+            if (monthlyBudget === 0) {
+                 addPitStopMessage('הגדר תקציב חודשי כדי להתחיל את המרוץ! (שלב 1: בניית הרכב)', 'info', '#'); // Link to lesson 2
+            } else if (utilization >= 100) {
+                addPitStopMessage('התרעת קראש! חרגת מהתקציב החודשי שלך! (שלב 4: רשת ביטחון)', 'error', '#'); // Link to lesson 8
+            } else if (utilization >= 80 && utilization < 100) {
+                addPitStopMessage('האט! התקרבת ל-80% מהתקציב החודשי. (שלב 2: תדלוק וכיול)', 'warning', '#'); // Link to lesson 5
+            }
+
+            const categoryExpenses = calculateCategoryExpenses();
+            for (const cat of categories) {
+                const budget = categoryBudgets[cat] || 0;
+                const spent = categoryExpenses[cat] || 0;
+                const percentage = budget > 0 ? (spent / budget) * 100 : 0;
+
+                if (percentage >= 100 && budget > 0) {
+                    addPitStopMessage(`חרגת מהתקציב בקטגוריית ${cat}! (שלב 2: תדלוק וכיול)`, 'error', '#'); // Link to lesson 5
+                } else if (percentage >= 80 && percentage < 100 && budget > 0) {
+                    addPitStopMessage(`שים לב! 80% מהתקציב ל${cat} נוצל. (שלב 2: תדלוק וכיול)`, 'warning', '#'); // Link to lesson 5
+                }
+            }
+
+            // Check for saving opportunities (simplified example)
+            if (totalExpenses > 500 && !currentMessages.some(msg => msg.includes('זיהיתי הזדמנות חיסכון פוטנציאלית'))) {
+                addPitStopMessage('זיהיתי הזדמנות חיסכון פוטנציאלית בחשבונות התקשורת שלך! (שלב 2: תדלוק וכיול)', 'info', '#'); // Link to saving engine
+            }
+        }
+
+        // --- Data Persistence (using localStorage for simplicity) ---
+        function saveData() {
+            localStorage.setItem('f1_dashboard_transactions', JSON.stringify(transactions));
+            localStorage.setItem('f1_dashboard_monthly_budget', monthlyBudget.toString());
+            localStorage.setItem('f1_dashboard_category_budgets', JSON.stringify(categoryBudgets));
+            localStorage.setItem('f1_dashboard_financial_goals', JSON.stringify(financialGoals));
+            localStorage.setItem('f1_dashboard_driver_profile', JSON.stringify(driverProfile));
+            localStorage.setItem('f1_dashboard_driver_points', driverPoints.toString());
+            localStorage.setItem('f1_dashboard_earned_badges', JSON.stringify(earnedBadges));
+        }
+
+        function loadData() {
+            const savedTransactions = localStorage.getItem('f1_dashboard_transactions');
+            const savedMonthlyBudget = localStorage.getItem('f1_dashboard_monthly_budget');
+            const savedCategoryBudgets = localStorage.getItem('f1_dashboard_category_budgets');
+            const savedFinancialGoals = localStorage.getItem('f1_dashboard_financial_goals');
+            const savedDriverProfile = localStorage.getItem('f1_dashboard_driver_profile');
+            const savedDriverPoints = localStorage.getItem('f1_dashboard_driver_points');
+            const savedEarnedBadges = localStorage.getItem('f1_dashboard_earned_badges');
+
+            if (savedTransactions) {
+                transactions = JSON.parse(savedTransactions);
+            }
+            if (savedMonthlyBudget) {
+                monthlyBudget = parseFloat(savedMonthlyBudget);
+            }
+            if (savedCategoryBudgets) {
+                categoryBudgets = JSON.parse(savedCategoryBudgets);
+            }
+            if (savedFinancialGoals) {
+                financialGoals = JSON.parse(savedFinancialGoals);
+            }
+            if (savedDriverProfile) {
+                driverProfile = JSON.parse(savedDriverProfile);
+            }
+            if (savedDriverPoints) {
+                driverPoints = parseInt(savedDriverPoints);
+            }
+            if (savedEarnedBadges) {
+                earnedBadges = JSON.parse(savedEarnedBadges);
+            }
+        }
+
+        // --- Modal & Form Handling ---
+
+        function openModal(modal) {
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        addExpenseBtn.addEventListener('click', () => {
+            modalTitle.textContent = 'הוסף הוצאה';
+            transactionTypeSelect.value = 'expense';
+            transactionCategorySelect.closest('div').style.display = 'block'; // Show category for expense
+            transactionForm.reset();
+            document.getElementById('transaction-date').valueAsDate = new Date();
+            delete transactionForm.dataset.editIndex; // Clear edit index
+            openModal(transactionModal);
+        });
+
+        addIncomeBtn.addEventListener('click', () => {
+            modalTitle.textContent = 'הוסף הכנסה';
+            transactionTypeSelect.value = 'income';
+            transactionCategorySelect.closest('div').style.display = 'none'; // Hide category for income
+            transactionForm.reset();
+            document.getElementById('transaction-date').valueAsDate = new Date();
+            delete transactionForm.dataset.editIndex; // Clear edit index
+            openModal(transactionModal);
+        });
+
+        transactionTypeSelect.addEventListener('change', () => {
+            if (transactionTypeSelect.value === 'expense') {
+                transactionCategorySelect.closest('div').style.display = 'block';
+            } else {
+                transactionCategorySelect.closest('div').style.display = 'none';
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => closeModal(transactionModal));
+        closeBudgetModalBtn.addEventListener('click', () => closeModal(budgetModal));
+        closeDriverProfileModalBtn.addEventListener('click', () => closeModal(driverProfileModal));
+        closeGoalModalBtn.addEventListener('click', () => closeModal(goalModal));
+
+        window.addEventListener('click', (event) => {
+            if (event.target === transactionModal) {
+                closeModal(transactionModal);
+            }
+            if (event.target === budgetModal) {
+                closeModal(budgetModal);
+            }
+            if (event.target === driverProfileModal) {
+                closeModal(driverProfileModal);
+            }
+            if (event.target === goalModal) {
+                closeModal(goalModal);
+            }
+        });
+
+        transactionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const type = transactionTypeSelect.value;
+            const description = document.getElementById('transaction-description').value;
+            const amount = parseFloat(document.getElementById('transaction-amount').value);
+            const category = type === 'expense' ? transactionCategorySelect.value : '';
+            const date = document.getElementById('transaction-date').value;
+
+            if (isNaN(amount) || amount <= 0) {
+                addPitStopMessage('הסכום חייב להיות מספר חיובי.', 'error');
+                return;
+            }
+
+            const editIndex = transactionForm.dataset.editIndex;
+            if (editIndex !== undefined) {
+                // Editing existing transaction
+                transactions[editIndex] = { type, description, amount, category, date };
+                addPitStopMessage('טרנזקציה עודכנה בהצלחה!', 'success');
+            } else {
+                // Adding new transaction
+                transactions.push({ type, description, amount, category, date });
+                addDriverPoints(10); // Points for adding a transaction
+                earnBadge('first_transaction'); // Check for first transaction badge
+                addPitStopMessage('טרנזקציה נשמרה בהצלחה! המשך/י לעדכן את יומן המרוץ.', 'success');
+            }
+            
+            saveData();
+            updateDashboard();
+            closeModal(transactionModal);
+        });
+
+        setBudgetBtn.addEventListener('click', () => {
+            document.getElementById('monthly-budget').value = monthlyBudget;
+            categoryBudgetInputsContainer.innerHTML = '';
+            categories.forEach(cat => {
+                const currentBudget = categoryBudgets[cat] || 0;
+                const inputHtml = `
+                    <div>
+                        <label for="budget-${cat}" class="block text-gray-300 text-sm font-bold mb-1">${cat}:</label>
+                        <input type="number" id="budget-${cat}" value="${currentBudget}" placeholder="0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" step="0.01">
+                    </div>
+                `;
+                categoryBudgetInputsContainer.insertAdjacentHTML('beforeend', inputHtml);
+            });
+            openModal(budgetModal);
+        });
+
+        budgetForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const oldMonthlyBudget = monthlyBudget;
+            monthlyBudget = parseFloat(document.getElementById('monthly-budget').value);
+            if (isNaN(monthlyBudget) || monthlyBudget < 0) {
+                addPitStopMessage('התקציב החודשי חייב להיות מספר חיובי.', 'error');
+                return;
+            }
+
+            categories.forEach(cat => {
+                const inputEl = document.getElementById(`budget-${cat}`);
+                categoryBudgets[cat] = parseFloat(inputEl.value) || 0;
+                if (isNaN(categoryBudgets[cat]) || categoryBudgets[cat] < 0) {
+                    addPitStopMessage(`התקציב עבור ${cat} חייב להיות מספר חיובי.`, 'error');
+                    categoryBudgets[cat] = 0;
+                    inputEl.value = 0;
+                }
+            });
+
+            if (monthlyBudget > 0 && oldMonthlyBudget === 0) { // First time setting budget
+                earnBadge('budget_setter');
+                addDriverPoints(25);
+            }
+
+            saveData();
+            updateDashboard();
+            closeModal(budgetModal);
+            addPitStopMessage('התקציב נשמר בהצלחה! המסלול הוגדר.', 'success');
+        });
+
+        driverProfileBtn.addEventListener('click', () => {
+            driverTypeSelect.value = driverProfile.type;
+            preferredToolSelect.value = driverProfile.preferredTool;
+            reviewFrequencySelect.value = driverProfile.reviewFrequency; // Load new field
+            openModal(driverProfileModal);
+        });
+
+        driverProfileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            driverProfile.type = driverTypeSelect.value;
+            driverProfile.preferredTool = preferredToolSelect.value;
+            driverProfile.reviewFrequency = reviewFrequencySelect.value; // Save new field
+            saveData();
+            closeModal(driverProfileModal);
+            addPitStopMessage('פרופיל הנהג שלך עודכן! המכונית מותאמת לסגנון שלך.', 'success');
+        });
+
+        addGoalBtn.addEventListener('click', () => {
+            goalForm.reset();
+            document.getElementById('goal-saved').value = 0; // Default to 0 saved
+            document.getElementById('goal-due-date').valueAsDate = null; // Clear date
+            openModal(goalModal);
+        });
+
+        goalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('goal-name').value;
+            const targetAmount = parseFloat(document.getElementById('goal-amount').value);
+            const savedAmount = parseFloat(document.getElementById('goal-saved').value);
+            const dueDate = document.getElementById('goal-due-date').value;
+
+            if (isNaN(targetAmount) || targetAmount <= 0 || isNaN(savedAmount) || savedAmount < 0) {
+                addPitStopMessage('סכומי היעד והחיסכון חייבים להיות מספרים חיוביים.', 'error');
+                return;
+            }
+            if (savedAmount > targetAmount) {
+                addPitStopMessage('הסכום שנחסך לא יכול להיות גדול מסכום היעד.', 'error');
+                return;
+            }
+
+            financialGoals.push({ name, targetAmount, savedAmount, dueDate });
+            earnBadge('first_goal'); // Check for first goal badge
+            addDriverPoints(30); // Points for setting a goal
+            saveData();
+            updateDashboard();
+            closeModal(goalModal);
+            addPitStopMessage(`יעד חדש הוגדר: "${name}"! קדימה אל קו הסיום!`, 'success');
+        });
+
+        // Event listeners for filters and sorting
+        filterTypeSelect.addEventListener('change', updateDashboard);
+        filterCategorySelect.addEventListener('change', updateDashboard);
+        filterStartDateInput.addEventListener('change', updateDashboard);
+        filterEndDateInput.addEventListener('change', updateDashboard);
+        searchDescriptionInput.addEventListener('input', updateDashboard); // Use 'input' for live search
+
+        sortDateDescBtn.addEventListener('click', () => {
+            setActiveSortButton(sortDateDescBtn);
+            updateDashboard();
+        });
+        sortDateAscBtn.addEventListener('click', () => {
+            setActiveSortButton(sortDateAscBtn);
+            updateDashboard();
+        });
+        sortAmountDescBtn.addEventListener('click', () => {
+            setActiveSortButton(sortAmountDescBtn);
+            updateDashboard();
+        });
+        sortAmountAscBtn.addEventListener('click', () => {
+            setActiveSortButton(sortAmountAscBtn);
+            updateDashboard();
+        });
+
+        function setActiveSortButton(button) {
+            [sortDateDescBtn, sortDateAscBtn, sortAmountDescBtn, sortAmountAscBtn].forEach(btn => {
+                btn.classList.remove('bg-blue-800');
+                btn.classList.add('bg-gray-700');
+            });
+            button.classList.remove('bg-gray-700');
+            button.classList.add('bg-blue-800');
+        }
+
+        // Populate category filter dropdown
+        function populateCategoryFilter() {
+            filterCategorySelect.innerHTML = '<option value="all">כל הקטגוריות</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                filterCategorySelect.appendChild(option);
+            });
+        }
+
+        // Placeholder for Detailed Report button
+        document.getElementById('detailed-report-btn').addEventListener('click', () => {
+            addPitStopMessage('פונקציית "דוח מפורט" בפיתוח... הישאר על המסלול!', 'info');
+        });
+
+        // Placeholder for Check Saving Opportunities button
+        checkSavingOpportunitiesBtn.addEventListener('click', () => {
+            addPitStopMessage('מנוע החיסכון מנתח את ההוצאות שלך... חפש/י הודעות פיט-סטופ עם הצעות!', 'info');
+            // In a real app, this would trigger a backend process to find and suggest savings.
+        });
+
+
+        // --- Initial Load ---
+        window.onload = function() {
+            loadData();
+            populateCategoryFilter(); // Populate filter dropdown on load
+            updateDashboard();
+            // Initial message adapted to syllabus stage 1
+            if (monthlyBudget === 0 && transactions.length === 0) {
+                addPitStopMessage('ברוך הבא לקוקפיט! כדי להתחיל את "מרוץ החיים", הגדר את התקציב החודשי שלך. (שלב 1: בניית הרכב)', 'info', '#');
+            } else if (monthlyBudget === 0) {
+                 addPitStopMessage('לא הגדרת תקציב חודשי! המסלול לא ברור. הגדר אותו כדי להמשיך. (שלב 1: בניית הרכב)', 'warning', '#');
+            }
+        };
+    </script>
+</body>
+</html>
+
