@@ -9,32 +9,32 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* כללי - רקע כהה, פונט Inter, כיווניות מימין לשמאל */
+        /* General - Dark background, Inter font, RTL direction */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d1117; /* רקע כהה */
-            color: #e6edf3; /* טקסט בהיר */
-            direction: rtl; /* מימין לשמאל לעברית */
+            background-color: #0d1117; /* Dark background */
+            color: #e6edf3; /* Light text */
+            direction: rtl; /* Right-to-left for Hebrew */
         }
-        /* קונטיינר ראשי לדשבורד - מרוכז, מעוגל, צל */
+        /* Main dashboard container - Centered, rounded, shadow */
         .dashboard-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 1.5rem;
-            background-color: #161b22; /* כהה מעט יותר מהרקע הכללי */
+            background-color: #161b22; /* Slightly lighter dark for dashboard */
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: grid;
             gap: 1.5rem;
-            grid-template-columns: 1fr; /* עמודה אחת למובייל */
+            grid-template-columns: 1fr; /* Single column for mobile */
         }
-        /* התאמה לשולחן עבודה / טאבלט - 2 עמודות */
+        /* Adapt for tablet/desktop - 2 columns */
         @media (min-width: 768px) {
             .dashboard-container {
                 grid-template-columns: 2fr 1fr;
             }
         }
-        /* כרטיס סקשן - רקע, פינות מעוגלות, צל */
+        /* Section card - Background, rounded corners, shadow */
         .section-card {
             background-color: #21262d;
             border-radius: 1rem;
@@ -42,12 +42,12 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             border: 1px solid #30363d;
         }
-        /* מד מהירות - עיצוב גרפי */
+        /* Speedometer - Graphic design */
         .speedometer-gauge {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            /* הקוניק גרדיאנט יוגדר דינמית ב JS */
+            /* Conic gradient will be defined dynamically in JS */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -78,11 +78,11 @@
             width: 2px;
             height: 70px;
             background-color: #e6edf3;
-            transform: translateX(-50%) rotate(-135deg); /* מיקום התחלתי: 0% ניצול */
+            transform: translateX(-50%) rotate(-135deg); /* Initial position: 0% utilization */
             transition: transform 0.5s ease-out;
             z-index: 2;
         }
-        /* פסי התקדמות - כללי */
+        /* Progress bars - General */
         .progress-bar-container {
             background-color: #30363d;
             border-radius: 9999px;
@@ -94,14 +94,14 @@
             border-radius: 9999px;
             transition: width 0.5s ease-out;
         }
-        /* צבעי פסי התקדמות */
+        /* Progress bar colors */
         .bg-green-500 { background-color: #28a745; }
         .bg-yellow-500 { background-color: #ffc107; }
         .bg-red-500 { background-color: #dc3545; }
 
-        /* מודאלים - חלונות קופצים */
+        /* Modals - Pop-up windows */
         .modal {
-            display: none; /* נסתר כברירת מחדל */
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -131,7 +131,7 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-        /* סקרוולבר מותאם אישית לרשימת טרנזקציות */
+        /* Custom scrollbar for transaction list */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
         }
@@ -163,12 +163,18 @@
             margin-left: 0.3rem;
             color: #ffc107; /* Gold color for badges */
         }
+
+        /* Filter/Sort active button style */
+        .filter-sort-active {
+            background-color: #2563eb !important; /* Blue-600 */
+            color: white !important;
+        }
     </style>
 </head>
 <body>
 
     <div class="dashboard-container">
-        <!-- כותרת ראשית - הקוקפיט הכלכלי שלך -->
+        <!-- Header - Your Financial Cockpit -->
         <header class="col-span-full text-center mb-6">
             <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
                 <i class="fas fa-car-alt ml-2"></i> הקוקפיט הכלכלי שלך <i class="fas fa-car-alt mr-2"></i>
@@ -176,9 +182,9 @@
             <p class="text-gray-400 mt-2">נהל את מרוץ החיים הכלכלי שלך</p>
         </header>
 
-        <!-- תוכן הדשבורד הראשי -->
+        <!-- Main Dashboard Content -->
         <div class="col-span-full lg:col-span-1 flex flex-col gap-4">
-            <!-- מד מהירות (Speedometer) – קצב הוצאות - המרכז והכי חשוב -->
+            <!-- Speedometer - Monthly Expense Rate - Central and most important -->
             <div class="section-card text-center">
                 <h2 class="text-xl font-semibold mb-4 text-blue-300">מד מהירות: קצב הוצאות חודשי</h2>
                 <div class="speedometer-gauge" style="--green-arc: 50%; --yellow-arc: 80%;">
@@ -194,18 +200,21 @@
                 </p>
             </div>
 
-            <!-- מחווני דלק (Fuel Gauges) – יתרת תקציב לפי קטגוריות -->
+            <!-- Fuel Gauges - Budget per Category -->
             <div class="section-card">
                 <h2 class="text-xl font-semibold mb-4 text-purple-300">מחווני דלק: תקציב לפי קטגוריות</h2>
                 <div id="category-gauges" class="space-y-4">
-                    <!-- מחווני קטגוריות ירונדרו כאן ע"י JS -->
+                    <!-- Category gauges will be rendered here by JS -->
                 </div>
+                <button id="manage-categories-btn" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-2 px-3 rounded-lg mt-4 w-full transition duration-300">
+                    <i class="fas fa-edit ml-1"></i> ניהול קטגוריות
+                </button>
                 <p class="text-sm text-gray-500 mt-3">
                     <i class="fas fa-info-circle ml-1"></i> עקבו אחרי "מפלס הדלק" בכל קטגוריה כדי למנוע חריגות.
                 </p>
             </div>
 
-            <!-- יעדים פיננסיים – "קו הסיום" -->
+            <!-- Financial Goals - "The Finish Line" -->
             <div class="section-card">
                 <h2 class="text-xl font-semibold mb-4 text-pink-300">יעדים פיננסיים: קו הסיום שלך</h2>
                 <div id="financial-goals" class="space-y-4">
@@ -217,11 +226,11 @@
                 </p>
             </div>
 
-            <!-- הודעות פיט-סטופ (Pit Stop Messages) – התראות והמלצות - הדרכה שוטפת -->
+            <!-- Pit Stop Messages - Alerts and Recommendations - Ongoing Guidance -->
             <div class="section-card">
                 <h2 class="text-xl font-semibold mb-4 text-yellow-300">הודעות פיט-סטופ</h2>
                 <div id="pit-stop-messages" class="space-y-3">
-                    <!-- הודעות פיט-סטופ ירונדרו כאן ע"י JS -->
+                    <!-- Pit stop messages will be rendered here by JS -->
                     <div class="bg-blue-900/30 border border-blue-700/50 p-3 rounded-md flex items-center">
                         <i class="fas fa-info-circle text-blue-400 ml-2"></i>
                         <p class="text-sm">ברוך הבא לקוקפיט! הגדר את התקציב שלך כדי להתחיל את המרוץ.</p>
@@ -233,32 +242,36 @@
             </div>
         </div>
 
-        <!-- עמודה ימנית (למסכים גדולים) / חלק תחתון (למסכים קטנים) -->
+        <!-- Right Column (for larger screens) / Bottom Section (for smaller screens) -->
         <div class="col-span-full lg:col-span-1 flex flex-col gap-4">
-            <!-- מסך ניווט (Navigation Screen) – יומן טרנזקציות - קלט הנתונים המרכזי -->
+            <!-- Navigation Screen - Transaction Log - Central Data Input -->
             <div class="section-card flex-grow">
                 <h2 class="text-xl font-semibold mb-4 text-green-300">מסך ניווט: יומן טרנזקציות</h2>
-                <!-- פילטרים וחיפוש -->
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <select id="filter-type" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
-                        <option value="all">כל הסוגים</option>
-                        <option value="expense">הוצאה</option>
-                        <option value="income">הכנסה</option>
-                    </select>
-                    <select id="filter-category" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
-                        <option value="all">כל הקטגוריות</option>
-                        <!-- Categories will be populated by JS -->
-                    </select>
-                    <input type="date" id="filter-start-date" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
-                    <input type="date" id="filter-end-date" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
-                    <input type="text" id="search-description" placeholder="חפש תיאור..." class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm flex-grow">
+                <!-- Filters and Search -->
+                <div class="flex flex-col gap-3 mb-4">
+                    <div class="flex gap-2">
+                        <select id="filter-type" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm flex-grow">
+                            <option value="all">כל הסוגים</option>
+                            <option value="expense">הוצאה</option>
+                            <option value="income">הכנסה</option>
+                        </select>
+                        <select id="filter-category" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm flex-grow">
+                            <option value="all">כל הקטגוריות</option>
+                            <!-- Categories will be populated by JS -->
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="date" id="filter-start-date" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm flex-grow">
+                        <input type="date" id="filter-end-date" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm flex-grow">
+                    </div>
+                    <input type="text" id="search-description" placeholder="חפש תיאור..." class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white text-sm">
                 </div>
-                <!-- כפתורי מיון -->
-                <div class="flex gap-2 mb-4">
-                    <button id="sort-date-desc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-numeric-down-alt ml-1"></i> תאריך (חדש)</button>
-                    <button id="sort-date-asc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-numeric-up-alt ml-1"></i> תאריך (ישן)</button>
-                    <button id="sort-amount-desc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-amount-down-alt ml-1"></i> סכום (גבוה)</button>
-                    <button id="sort-amount-asc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300"><i class="fas fa-sort-amount-up-alt ml-1"></i> סכום (נמוך)</button>
+                <!-- Sort Buttons -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button id="sort-date-desc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300 filter-sort-btn"><i class="fas fa-sort-numeric-down-alt ml-1"></i> תאריך (חדש)</button>
+                    <button id="sort-date-asc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300 filter-sort-btn"><i class="fas fa-sort-numeric-up-alt ml-1"></i> תאריך (ישן)</button>
+                    <button id="sort-amount-desc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300 filter-sort-btn"><i class="fas fa-sort-amount-down-alt ml-1"></i> סכום (גבוה)</button>
+                    <button id="sort-amount-asc" class="bg-gray-700 hover:bg-gray-600 text-white text-xs py-1 px-2 rounded transition duration-300 filter-sort-btn"><i class="fas fa-sort-amount-up-alt ml-1"></i> סכום (נמוך)</button>
                 </div>
 
                 <div class="flex justify-between items-center mb-4">
@@ -270,7 +283,7 @@
                     </button>
                 </div>
                 <div id="transactions-list" class="max-h-96 overflow-y-auto custom-scrollbar">
-                    <!-- טרנזקציות ירונדרו כאן ע"י JS -->
+                    <!-- Transactions will be rendered here by JS -->
                     <p class="text-gray-500 text-center py-4" id="no-transactions-message">אין טרנזקציות להצגה.</p>
                 </div>
                 <p class="text-sm text-gray-500 mt-3">
@@ -278,7 +291,7 @@
                 </p>
             </div>
 
-            <!-- ניתוח הוצאות: "מסלול ההוצאות" -->
+            <!-- Expense Analysis: "Your Expense Track" -->
             <div class="section-card">
                 <h2 class="text-xl font-semibold mb-4 text-orange-300">ניתוח הוצאות: מסלול ההוצאות שלך</h2>
                 <div id="expense-analysis-section" class="space-y-4">
@@ -301,7 +314,7 @@
                 </p>
             </div>
 
-            <!-- טבלת זמנים (Lap Times / Leaderboard) – סיכום ביצועים - ניתוח והתקדמות -->
+            <!-- Lap Times / Leaderboard - Performance Summary - Analysis and Progress -->
             <div class="section-card">
                 <h2 class="text-xl font-semibold mb-4 text-orange-300">טבלת זמנים: סיכום ביצועים חודשי</h2>
                 <div id="performance-summary" class="space-y-4">
@@ -323,7 +336,7 @@
                 </p>
             </div>
 
-            <!-- גיימיפיקציה – "אתגרי מרוץ" -->
+            <!-- Gamification - "Race Challenges" -->
             <div class="section-card">
                 <h2 class="text-xl font-semibold mb-4 text-teal-300">אתגרי מרוץ: צברו נקודות וזכו בתגים!</h2>
                 <div id="gamification-section" class="space-y-3">
@@ -352,7 +365,7 @@
                 </p>
             </div>
 
-            <!-- כפתורי שליטה (Control Buttons) - פעולות מפתח -->
+            <!-- Control Buttons - Key Actions -->
             <div class="section-card grid grid-cols-2 gap-4">
                 <button id="set-budget-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105">
                     <i class="fas fa-sliders-h ml-2"></i> הגדר תקציב <br><span class="text-xs">(שלב 1: בניית הרכב)</span>
@@ -367,7 +380,7 @@
         </div>
     </div>
 
-    <!-- מודאל הוספת טרנזקציה -->
+    <!-- Transaction Modal -->
     <div id="transaction-modal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="close-modal-btn">&times;</span>
@@ -391,13 +404,7 @@
                 <div>
                     <label for="transaction-category" class="block text-gray-300 text-sm font-bold mb-2">קטגוריה (להוצאה בלבד):</label>
                     <select id="transaction-category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
-                        <option value="מזון">מזון</option>
-                        <option value="דיור">דיור</option>
-                        <option value="תחבורה">תחבורה</option>
-                        <option value="בילויים">בילויים</option>
-                        <option value="חינוך">חינוך</option>
-                        <option value="בריאות">בריאות</option>
-                        <option value="אחר">אחר</option>
+                        <!-- Categories will be populated dynamically -->
                     </select>
                 </div>
                 <div>
@@ -411,7 +418,7 @@
         </div>
     </div>
 
-    <!-- מודאל הגדרת תקציב -->
+    <!-- Budget Modal -->
     <div id="budget-modal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="close-budget-modal-btn">&times;</span>
@@ -426,7 +433,7 @@
                 </div>
                 <h4 class="text-lg font-semibold mt-4 text-gray-300">תקציב לפי קטגוריות:</h4>
                 <div id="category-budget-inputs" class="space-y-2">
-                    <!-- קלט תקציבי קטגוריות ירונדרו כאן ע"י JS -->
+                    <!-- Category budget inputs will be rendered here by JS -->
                 </div>
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full transition duration-300 transform hover:scale-105">
                     <i class="fas fa-save ml-2"></i> שמור תקציב
@@ -435,7 +442,7 @@
         </div>
     </div>
 
-    <!-- מודאל פרופיל נהג -->
+    <!-- Driver Profile Modal -->
     <div id="driver-profile-modal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="close-driver-profile-modal-btn">&times;</span>
@@ -478,7 +485,32 @@
         </div>
     </div>
 
-    <!-- מודאל הגדרת יעד פיננסי -->
+    <!-- Goal Selection Modal -->
+    <div id="goal-selection-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-goal-selection-modal-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-6 text-center text-pink-300">בחר יעד פיננסי</h3>
+            <p class="text-gray-400 text-center mb-4">
+                <i class="fas fa-flag-checkered ml-1"></i> בחר את קו הסיום הבא שלך במרוץ!
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button data-goal-type="emergency" class="preset-goal-btn bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-lg">
+                    <i class="fas fa-hand-holding-usd ml-2"></i> קרן חירום
+                </button>
+                <button data-goal-type="vacation" class="preset-goal-btn bg-green-700 hover:bg-green-800 text-white font-bold py-4 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-lg">
+                    <i class="fas fa-plane ml-2"></i> חופשה חלומית
+                </button>
+                <button data-goal-type="debt" class="preset-goal-btn bg-red-700 hover:bg-red-800 text-white font-bold py-4 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-lg">
+                    <i class="fas fa-money-bill-wave ml-2"></i> הפחתת חוב
+                </button>
+                <button data-goal-type="custom" class="preset-goal-btn bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-lg col-span-full">
+                    <i class="fas fa-plus-circle ml-2"></i> יעד מותאם אישית
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Goal Modal (for custom/editing goals) -->
     <div id="goal-modal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="close-goal-modal-btn">&times;</span>
@@ -507,19 +539,36 @@
         </div>
     </div>
 
+    <!-- Category Management Modal -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-category-modal-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-6 text-center text-purple-300">ניהול קטגוריות</h3>
+            <p class="text-gray-400 text-center mb-4">
+                <i class="fas fa-tags ml-1"></i> הגדר את "סיווג המסלול" שלך.
+            </p>
+            <div id="current-categories-list" class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar mb-4">
+                <!-- Categories will be listed here -->
+            </div>
+            <form id="add-category-form" class="flex gap-2">
+                <input type="text" id="new-category-name" placeholder="שם קטגוריה חדשה" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white flex-grow" required>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-plus-circle"></i> הוסף
+                </button>
+            </form>
+        </div>
+    </div>
+
 
     <script>
         // --- Global Data & State ---
         let transactions = []; // List of transactions (expenses/income)
         let monthlyBudget = 0; // Total monthly budget
+        let customCategories = []; // User-defined custom categories
+        let allCategories = ["מזון", "דיור", "תחבורה", "בילויים", "חינוך", "בריאות", "אחר"]; // Default categories
         let categoryBudgets = { // Budget for each category
-            "מזון": 0,
-            "דיור": 0,
-            "תחבורה": 0,
-            "בילויים": 0,
-            "חינוך": 0,
-            "בריאות": 0,
-            "אחר": 0
+            "מזון": 0, "דיור": 0, "תחבורה": 0, "בילויים": 0,
+            "חינוך": 0, "בריאות": 0, "אחר": 0
         };
         let financialGoals = []; // Financial goals
         let driverProfile = { // Driver profile
@@ -530,7 +579,6 @@
         let driverPoints = 0; // Driver points for gamification
         let earnedBadges = []; // Earned badges
 
-        const categories = ["מזון", "דיור", "תחבורה", "בילויים", "חינוך", "בריאות", "אחר"];
         const allBadges = [
             { id: 'first_transaction', name: 'נהג מתחיל', icon: 'fa-flag-checkered', description: 'הזנת טרנזקציה ראשונה' },
             { id: 'budget_setter', name: 'מתכנן מסלול', icon: 'fa-chart-line', description: 'הגדרת תקציב חודשי' },
@@ -565,10 +613,7 @@
         const filterStartDateInput = document.getElementById('filter-start-date');
         const filterEndDateInput = document.getElementById('filter-end-date');
         const searchDescriptionInput = document.getElementById('search-description');
-        const sortDateDescBtn = document.getElementById('sort-date-desc');
-        const sortDateAscBtn = document.getElementById('sort-date-asc');
-        const sortAmountDescBtn = document.getElementById('sort-amount-desc');
-        const sortAmountAscBtn = document.getElementById('sort-amount-asc');
+        const sortButtons = document.querySelectorAll('.filter-sort-btn'); // Unified selector
         const expenseAnalysisSection = document.getElementById('expense-analysis-section');
         const recurringExpensesList = document.getElementById('recurring-expenses-list');
         const checkSavingOpportunitiesBtn = document.getElementById('check-saving-opportunities-btn');
@@ -578,12 +623,16 @@
         const budgetModal = document.getElementById('budget-modal');
         const driverProfileModal = document.getElementById('driver-profile-modal');
         const goalModal = document.getElementById('goal-modal');
+        const goalSelectionModal = document.getElementById('goal-selection-modal'); // New goal selection modal
+        const categoryModal = document.getElementById('category-modal'); // New category management modal
 
         // Modal close buttons
         const closeModalBtn = document.getElementById('close-modal-btn');
         const closeBudgetModalBtn = document.getElementById('close-budget-modal-btn');
         const closeDriverProfileModalBtn = document.getElementById('close-driver-profile-modal-btn');
         const closeGoalModalBtn = document.getElementById('close-goal-modal-btn');
+        const closeGoalSelectionModalBtn = document.getElementById('close-goal-selection-modal-btn'); // New
+        const closeCategoryModalBtn = document.getElementById('close-category-modal-btn'); // New
 
         // Action buttons
         const addExpenseBtn = document.getElementById('add-expense-btn');
@@ -591,12 +640,14 @@
         const setBudgetBtn = document.getElementById('set-budget-btn');
         const driverProfileBtn = document.getElementById('driver-profile-btn');
         const addGoalBtn = document.getElementById('add-goal-btn');
+        const manageCategoriesBtn = document.getElementById('manage-categories-btn'); // New
 
         // Forms
         const transactionForm = document.getElementById('transaction-form');
         const budgetForm = document.getElementById('budget-form');
         const driverProfileForm = document.getElementById('driver-profile-form');
         const goalForm = document.getElementById('goal-form');
+        const addCategoryForm = document.getElementById('add-category-form'); // New
 
         // Form/Modal specific elements
         const modalTitle = document.getElementById('modal-title');
@@ -605,7 +656,10 @@
         const categoryBudgetInputsContainer = document.getElementById('category-budget-inputs');
         const driverTypeSelect = document.getElementById('driver-type');
         const preferredToolSelect = document.getElementById('preferred-tool');
-        const reviewFrequencySelect = document.getElementById('review-frequency'); // New
+        const reviewFrequencySelect = document.getElementById('review-frequency');
+        const presetGoalBtns = document.querySelectorAll('.preset-goal-btn'); // New
+        const currentCategoriesList = document.getElementById('current-categories-list'); // New
+        const newCategoryNameInput = document.getElementById('new-category-name'); // New
 
 
         // --- Utility Functions ---
@@ -657,7 +711,7 @@
          */
         function calculateCategoryExpenses() {
             const categoryExp = {};
-            categories.forEach(cat => categoryExp[cat] = 0);
+            allCategories.forEach(cat => categoryExp[cat] = 0); // Use allCategories here
 
             const now = new Date();
             const currentMonth = now.getMonth();
@@ -711,19 +765,18 @@
             }
 
             // Sort
-            const sortByDateDesc = sortDateDescBtn.classList.contains('bg-blue-800');
-            const sortByDateAsc = sortDateAscBtn.classList.contains('bg-blue-800');
-            const sortByAmountDesc = sortAmountDescBtn.classList.contains('bg-blue-800');
-            const sortByAmountAsc = sortAmountAscBtn.classList.contains('bg-blue-800');
-
-            if (sortByDateDesc) {
-                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } else if (sortByDateAsc) {
-                filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-            } else if (sortByAmountDesc) {
-                filtered.sort((a, b) => b.amount - a.amount);
-            } else if (sortByAmountAsc) {
-                filtered.sort((a, b) => a.amount - b.amount);
+            const activeSortButton = document.querySelector('.filter-sort-btn.filter-sort-active');
+            if (activeSortButton) {
+                const sortId = activeSortButton.id;
+                if (sortId === 'sort-date-desc') {
+                    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                } else if (sortId === 'sort-date-asc') {
+                    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+                } else if (sortId === 'sort-amount-desc') {
+                    filtered.sort((a, b) => b.amount - a.amount);
+                } else if (sortId === 'sort-amount-asc') {
+                    filtered.sort((a, b) => a.amount - b.amount);
+                }
             } else {
                 // Default sort by date descending if no sort button is active
                 filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -777,7 +830,7 @@
             categoryGaugesContainer.innerHTML = '';
             const categoryExpenses = calculateCategoryExpenses();
 
-            categories.forEach(cat => {
+            allCategories.forEach(cat => { // Use allCategories here
                 const budget = categoryBudgets[cat] || 0;
                 const spent = categoryExpenses[cat] || 0;
                 const percentage = budget > 0 ? (spent / budget) * 100 : 0;
@@ -1038,6 +1091,12 @@
          * @param {string} syllabusLink (optional) Link to relevant syllabus lesson.
          */
         function addPitStopMessage(message, type = 'info', syllabusLink = '#') {
+            // Clear previous alerts to avoid duplication, but keep general info messages
+            const existingMessages = Array.from(pitStopMessages.children).map(el => el.textContent.split('(למד עוד)')[0].trim());
+            if (existingMessages.includes(message.split('(למד עוד)')[0].trim())) {
+                return; // Don't add duplicate messages
+            }
+
             let bgColor = 'bg-blue-900/30';
             let borderColor = 'border-blue-700/50';
             let icon = 'fas fa-info-circle';
@@ -1079,6 +1138,7 @@
          * Updates all dashboard components.
          */
         function updateDashboard() {
+            updateAllCategories(); // Ensure categories are updated first
             updateSpeedometer();
             updateCategoryGauges();
             renderTransactions(); // This now uses filters/sort
@@ -1087,6 +1147,7 @@
             updateGamification();
             checkBudgetAlerts(); // Check for alerts after updating
             updateExpenseAnalysis(); // New: Update expense analysis section
+            populateCategoryDropdowns(); // Re-populate dropdowns with new categories
         }
 
         /**
@@ -1105,7 +1166,7 @@
             if (chartData.length > 0) {
                 pieChartDiv.innerHTML = `<ul class="text-xs text-gray-400 text-right">${chartData.map(item => `<li>${item}</li>`).join('')}</ul>`;
             } else {
-                pieChartDiv.innerHTML = `אין הוצאות להצגה בגרף.`;
+                pieChartDiv.innerHTML = `<p class="text-gray-500 text-center">אין הוצאות להצגה בגרף.</p>`;
             }
 
 
@@ -1115,7 +1176,7 @@
             const currentYear = new Date().getFullYear();
             const recurring = transactions.filter(t =>
                 t.type === 'expense' &&
-                t.description.toLowerCase().includes('מנוי') && // Simple keyword check
+                (t.description.toLowerCase().includes('מנוי') || t.description.toLowerCase().includes('שירות')) && // Simple keyword check
                 new Date(t.date).getMonth() === currentMonth &&
                 new Date(t.date).getFullYear() === currentYear
             );
@@ -1140,11 +1201,6 @@
          * Checks budget utilization and adds alerts if necessary.
          */
         function checkBudgetAlerts() {
-            // Clear previous alerts to avoid duplication, but keep general info messages
-            const currentMessages = Array.from(pitStopMessages.children);
-            currentMessages.filter(el => !el.textContent.includes('ברוך הבא') && !el.textContent.includes('פיתוח')).forEach(el => el.remove());
-
-
             const totalExpenses = calculateMonthlyExpenses();
             const utilization = monthlyBudget > 0 ? (totalExpenses / monthlyBudget) * 100 : 0;
 
@@ -1157,7 +1213,7 @@
             }
 
             const categoryExpenses = calculateCategoryExpenses();
-            for (const cat of categories) {
+            for (const cat of allCategories) { // Use allCategories here
                 const budget = categoryBudgets[cat] || 0;
                 const spent = categoryExpenses[cat] || 0;
                 const percentage = budget > 0 ? (spent / budget) * 100 : 0;
@@ -1170,7 +1226,7 @@
             }
 
             // Check for saving opportunities (simplified example)
-            if (totalExpenses > 500 && !currentMessages.some(msg => msg.includes('זיהיתי הזדמנות חיסכון פוטנציאלית'))) {
+            if (totalExpenses > 500) {
                 addPitStopMessage('זיהיתי הזדמנות חיסכון פוטנציאלית בחשבונות התקשורת שלך! (שלב 2: תדלוק וכיול)', 'info', '#'); // Link to saving engine
             }
         }
@@ -1184,6 +1240,7 @@
             localStorage.setItem('f1_dashboard_driver_profile', JSON.stringify(driverProfile));
             localStorage.setItem('f1_dashboard_driver_points', driverPoints.toString());
             localStorage.setItem('f1_dashboard_earned_badges', JSON.stringify(earnedBadges));
+            localStorage.setItem('f1_dashboard_custom_categories', JSON.stringify(customCategories)); // Save custom categories
         }
 
         function loadData() {
@@ -1194,6 +1251,7 @@
             const savedDriverProfile = localStorage.getItem('f1_dashboard_driver_profile');
             const savedDriverPoints = localStorage.getItem('f1_dashboard_driver_points');
             const savedEarnedBadges = localStorage.getItem('f1_dashboard_earned_badges');
+            const savedCustomCategories = localStorage.getItem('f1_dashboard_custom_categories');
 
             if (savedTransactions) {
                 transactions = JSON.parse(savedTransactions);
@@ -1216,7 +1274,46 @@
             if (savedEarnedBadges) {
                 earnedBadges = JSON.parse(savedEarnedBadges);
             }
+            if (savedCustomCategories) {
+                customCategories = JSON.parse(savedCustomCategories);
+            }
+            updateAllCategories(); // Update allCategories array after loading custom ones
         }
+
+        /**
+         * Updates the combined allCategories array.
+         */
+        function updateAllCategories() {
+            allCategories = ["מזון", "דיור", "תחבורה", "בילויים", "חינוך", "בריאות", "אחר", ...customCategories];
+            // Ensure no duplicates if a custom category matches a default one (though unlikely with current defaults)
+            allCategories = [...new Set(allCategories)];
+        }
+
+        /**
+         * Populates category dropdowns (transaction form, filter, budget).
+         */
+        function populateCategoryDropdowns() {
+            const dropdowns = [transactionCategorySelect, filterCategorySelect];
+            dropdowns.forEach(dropdown => {
+                const currentSelected = dropdown.value; // Keep current selection if possible
+                dropdown.innerHTML = '';
+                if (dropdown.id === 'filter-category') {
+                    const allOption = document.createElement('option');
+                    allOption.value = 'all';
+                    allOption.textContent = 'כל הקטגוריות';
+                    dropdown.appendChild(allOption);
+                }
+
+                allCategories.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    dropdown.appendChild(option);
+                });
+                dropdown.value = currentSelected; // Restore selection
+            });
+        }
+
 
         // --- Modal & Form Handling ---
 
@@ -1235,6 +1332,7 @@
             transactionForm.reset();
             document.getElementById('transaction-date').valueAsDate = new Date();
             delete transactionForm.dataset.editIndex; // Clear edit index
+            populateCategoryDropdowns(); // Ensure latest categories are in dropdown
             openModal(transactionModal);
         });
 
@@ -1245,6 +1343,7 @@
             transactionForm.reset();
             document.getElementById('transaction-date').valueAsDate = new Date();
             delete transactionForm.dataset.editIndex; // Clear edit index
+            populateCategoryDropdowns(); // Ensure latest categories are in dropdown
             openModal(transactionModal);
         });
 
@@ -1260,6 +1359,8 @@
         closeBudgetModalBtn.addEventListener('click', () => closeModal(budgetModal));
         closeDriverProfileModalBtn.addEventListener('click', () => closeModal(driverProfileModal));
         closeGoalModalBtn.addEventListener('click', () => closeModal(goalModal));
+        closeGoalSelectionModalBtn.addEventListener('click', () => closeModal(goalSelectionModal)); // New
+        closeCategoryModalBtn.addEventListener('click', () => closeModal(categoryModal)); // New
 
         window.addEventListener('click', (event) => {
             if (event.target === transactionModal) {
@@ -1273,6 +1374,12 @@
             }
             if (event.target === goalModal) {
                 closeModal(goalModal);
+            }
+            if (event.target === goalSelectionModal) {
+                closeModal(goalSelectionModal);
+            }
+            if (event.target === categoryModal) {
+                closeModal(categoryModal);
             }
         });
 
@@ -1310,7 +1417,7 @@
         setBudgetBtn.addEventListener('click', () => {
             document.getElementById('monthly-budget').value = monthlyBudget;
             categoryBudgetInputsContainer.innerHTML = '';
-            categories.forEach(cat => {
+            allCategories.forEach(cat => { // Use allCategories here
                 const currentBudget = categoryBudgets[cat] || 0;
                 const inputHtml = `
                     <div>
@@ -1332,7 +1439,7 @@
                 return;
             }
 
-            categories.forEach(cat => {
+            allCategories.forEach(cat => { // Use allCategories here
                 const inputEl = document.getElementById(`budget-${cat}`);
                 categoryBudgets[cat] = parseFloat(inputEl.value) || 0;
                 if (isNaN(categoryBudgets[cat]) || categoryBudgets[cat] < 0) {
@@ -1370,11 +1477,38 @@
             addPitStopMessage('פרופיל הנהג שלך עודכן! המכונית מותאמת לסגנון שלך.', 'success');
         });
 
+        // Goal Selection Logic
         addGoalBtn.addEventListener('click', () => {
-            goalForm.reset();
-            document.getElementById('goal-saved').value = 0; // Default to 0 saved
-            document.getElementById('goal-due-date').valueAsDate = null; // Clear date
-            openModal(goalModal);
+            openModal(goalSelectionModal);
+        });
+
+        presetGoalBtns.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const goalType = e.currentTarget.dataset.goalType;
+                goalForm.reset();
+                document.getElementById('goal-saved').value = 0; // Default to 0 saved
+                document.getElementById('goal-due-date').valueAsDate = null; // Clear date
+
+                if (goalType === 'emergency') {
+                    document.getElementById('goal-name').value = 'קרן חירום';
+                    document.getElementById('goal-amount').value = 15000; // Example default
+                    addPitStopMessage('יעד: קרן חירום. זכרו, זהו כרית הביטחון שלכם במרוץ!', 'info');
+                } else if (goalType === 'vacation') {
+                    document.getElementById('goal-name').value = 'חופשה חלומית';
+                    document.getElementById('goal-amount').value = 5000; // Example default
+                    addPitStopMessage('יעד: חופשה חלומית. תכננו מראש ותיהנו בלי דאגות!', 'info');
+                } else if (goalType === 'debt') {
+                    document.getElementById('goal-name').value = 'הפחתת חוב';
+                    document.getElementById('goal-amount').value = 2000; // Example default
+                    addPitStopMessage('יעד: הפחתת חוב. כל הפחתה מקרבת אתכם לחופש פיננסי!', 'info');
+                } else if (goalType === 'custom') {
+                    document.getElementById('goal-name').value = '';
+                    document.getElementById('goal-amount').value = '';
+                    addPitStopMessage('יעד מותאם אישית. הגדירו את קו הסיום שלכם!', 'info');
+                }
+                closeModal(goalSelectionModal);
+                openModal(goalModal);
+            });
         });
 
         goalForm.addEventListener('submit', (e) => {
@@ -1402,6 +1536,62 @@
             addPitStopMessage(`יעד חדש הוגדר: "${name}"! קדימה אל קו הסיום!`, 'success');
         });
 
+        // Category Management Logic
+        manageCategoriesBtn.addEventListener('click', () => {
+            renderCategoryList();
+            openModal(categoryModal);
+        });
+
+        function renderCategoryList() {
+            currentCategoriesList.innerHTML = '';
+            allCategories.forEach(cat => {
+                const isDefault = ["מזון", "דיור", "תחבורה", "בילויים", "חינוך", "בריאות", "אחר"].includes(cat);
+                const categoryItemHtml = `
+                    <div class="flex justify-between items-center bg-gray-800/50 p-2 rounded-md">
+                        <span class="text-gray-200">${cat}</span>
+                        ${!isDefault ? `<button data-category="${cat}" class="delete-category-btn text-red-400 hover:text-red-500 transition duration-200 ml-2">
+                            <i class="fas fa-trash"></i>
+                        </button>` : `<span class="text-gray-500 text-xs ml-2">(ברירת מחדל)</span>`}
+                    </div>
+                `;
+                currentCategoriesList.insertAdjacentHTML('beforeend', categoryItemHtml);
+            });
+
+            document.querySelectorAll('.delete-category-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const categoryToDelete = e.currentTarget.dataset.category;
+                    if (confirm(`האם אתה בטוח שברצונך למחוק את הקטגוריה "${categoryToDelete}"? הוצאות המשויכות לקטגוריה זו לא ישונו.`)) {
+                        customCategories = customCategories.filter(cat => cat !== categoryToDelete);
+                        // Remove from categoryBudgets if it exists
+                        delete categoryBudgets[categoryToDelete];
+                        saveData();
+                        updateAllCategories(); // Rebuild allCategories
+                        renderCategoryList(); // Re-render the list in the modal
+                        updateDashboard(); // Update main dashboard
+                        addPitStopMessage(`הקטגוריה "${categoryToDelete}" נמחקה.`, 'info');
+                    }
+                });
+            });
+        }
+
+        addCategoryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newCatName = newCategoryNameInput.value.trim();
+            if (newCatName && !allCategories.includes(newCatName)) {
+                customCategories.push(newCatName);
+                categoryBudgets[newCatName] = 0; // Initialize budget for new category
+                saveData();
+                newCategoryNameInput.value = '';
+                updateAllCategories(); // Rebuild allCategories
+                renderCategoryList(); // Re-render the list in the modal
+                updateDashboard(); // Update main dashboard
+                addPitStopMessage(`הקטגוריה "${newCatName}" נוספה בהצלחה!`, 'success');
+            } else if (allCategories.includes(newCatName)) {
+                addPitStopMessage('קטגוריה זו כבר קיימת.', 'warning');
+            }
+        });
+
+
         // Event listeners for filters and sorting
         filterTypeSelect.addEventListener('change', updateDashboard);
         filterCategorySelect.addEventListener('change', updateDashboard);
@@ -1409,40 +1599,42 @@
         filterEndDateInput.addEventListener('change', updateDashboard);
         searchDescriptionInput.addEventListener('input', updateDashboard); // Use 'input' for live search
 
-        sortDateDescBtn.addEventListener('click', () => {
-            setActiveSortButton(sortDateDescBtn);
-            updateDashboard();
-        });
-        sortDateAscBtn.addEventListener('click', () => {
-            setActiveSortButton(sortDateAscBtn);
-            updateDashboard();
-        });
-        sortAmountDescBtn.addEventListener('click', () => {
-            setActiveSortButton(sortAmountDescBtn);
-            updateDashboard();
-        });
-        sortAmountAscBtn.addEventListener('click', () => {
-            setActiveSortButton(sortAmountAscBtn);
-            updateDashboard();
+        sortButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                setActiveSortButton(button);
+                updateDashboard();
+            });
         });
 
         function setActiveSortButton(button) {
-            [sortDateDescBtn, sortDateAscBtn, sortAmountDescBtn, sortAmountAscBtn].forEach(btn => {
-                btn.classList.remove('bg-blue-800');
+            sortButtons.forEach(btn => {
+                btn.classList.remove('filter-sort-active');
                 btn.classList.add('bg-gray-700');
             });
+            button.classList.add('filter-sort-active');
             button.classList.remove('bg-gray-700');
-            button.classList.add('bg-blue-800');
         }
 
         // Populate category filter dropdown
-        function populateCategoryFilter() {
-            filterCategorySelect.innerHTML = '<option value="all">כל הקטגוריות</option>';
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                filterCategorySelect.appendChild(option);
+        function populateCategoryDropdowns() {
+            const dropdowns = [transactionCategorySelect, filterCategorySelect];
+            dropdowns.forEach(dropdown => {
+                const currentSelected = dropdown.value; // Keep current selection if possible
+                dropdown.innerHTML = '';
+                if (dropdown.id === 'filter-category') {
+                    const allOption = document.createElement('option');
+                    allOption.value = 'all';
+                    allOption.textContent = 'כל הקטגוריות';
+                    dropdown.appendChild(allOption);
+                }
+
+                allCategories.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    dropdown.appendChild(option);
+                });
+                dropdown.value = currentSelected; // Restore selection
             });
         }
 
@@ -1461,7 +1653,8 @@
         // --- Initial Load ---
         window.onload = function() {
             loadData();
-            populateCategoryFilter(); // Populate filter dropdown on load
+            updateAllCategories(); // Ensure allCategories is built after loading custom categories
+            populateCategoryDropdowns(); // Populate filter and transaction dropdowns
             updateDashboard();
             // Initial message adapted to syllabus stage 1
             if (monthlyBudget === 0 && transactions.length === 0) {
