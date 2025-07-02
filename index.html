@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הקוקפיט הכלכלי שלך</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* כללי - רקע כהה, פונט Inter, כיווניות מימין לשמאל */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* רקע כהה */
+            color: #e6edf3; /* טקסט בהיר */
+            direction: rtl; /* מימין לשמאל לעברית */
+        }
+        /* קונטיינר ראשי לדשבורד - מרוכז, מעוגל, צל */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #161b22; /* כהה מעט יותר מהרקע הכללי */
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr; /* עמודה אחת למובייל */
+        }
+        /* התאמה לשולחן עבודה / טאבלט - 2 עמודות */
+        @media (min-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        /* כרטיס סקשן - רקע, פינות מעוגלות, צל */
+        .section-card {
+            background-color: #21262d;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #30363d;
+        }
+        /* מד מהירות - עיצוב גרפי */
+        .speedometer-gauge {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            /* הקוניק גרדיאנט יוגדר דינמית ב JS */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .speedometer-inner {
+            width: 120px;
+            height: 120px;
+            background-color: #21262d;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e6edf3;
+            font-weight: bold;
+            font-size: 1.25rem;
+            position: relative;
+            z-index: 1;
+        }
+        .speedometer-needle {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            width: 2px;
+            height: 70px;
+            background-color: #e6edf3;
+            transform: translateX(-50%) rotate(-135deg); /* מיקום התחלתי: 0% ניצול */
+            transition: transform 0.5s ease-out;
+            z-index: 2;
+        }
+        /* פסי התקדמות - כללי */
+        .progress-bar-container {
+            background-color: #30363d;
+            border-radius: 9999px;
+            height: 10px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-out;
+        }
+        /* צבעי פסי התקדמות */
+        .bg-green-500 { background-color: #28a745; }
+        .bg-yellow-500 { background-color: #ffc107; }
+        .bg-red-500 { background-color: #dc3545; }
+
+        /* מודאלים - חלונות קופצים */
+        .modal {
+            display: none; /* נסתר כברירת מחדל */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #21262d;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #e6edf3;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        /* סקרוולבר מותאם אישית לרשימת טרנזקציות */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #30363d;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #586069;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6a737d;
+        }
+
+        /* Badge for gamification */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #30363d;
+            color: #e6edf3;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            border: 1px solid #586069;
+        }
+        .badge i {
+            margin-left: 0.3rem;
+            color: #ffc107; /* Gold color for badges */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- כותרת ראשית - הקוקפיט הכלכלי שלך -->
+        <header class="col-span-full text-center mb-6">
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+                <i class="fas fa-car-alt ml-2"></i> הקוקפיט הכלכלי שלך <i class="fas fa-car-alt mr-2"></i>
+            </h1>
+            <p class="text-gray-400 mt-2">נהל את מרוץ החיים הכלכלי שלך</p>
+        </header>
+
+        <!-- תוכן הדשבורד הראשי -->
+        <div class="col-span-full lg:col-span-1 flex flex-col gap-4">
+            <!-- מד מהירות (Speedometer) – קצב הוצאות - המרכז והכי חשוב -->
+            <div class="section-card text-center">
+                <h2 class="text-xl font-semibold mb-4 text-blue-300">מד מהירות: קצב הוצאות חודשי</h2>
+                <div class="speedometer-gauge" style="--green-arc: 50%; --yellow-arc: 80%;">
+                    <div class="speedometer-inner">
+                        <span id="budget-utilization-percent">0%</span>
+                        <span class="text-sm text-gray-400">נוצל מהתקציב</span>
+                    </div>
+                    <div class="speedometer-needle" id="speedometer-needle"></div>
+                </div>
+                <p class="mt-4 text-lg font-medium">יתרה לתקציב החודשי: <span id="remaining-budget" class="text-green-400">0 ש"ח</span></p>
+                <p class="text-sm text-gray-500 mt-1">
+                    <i class="fas fa-info-circle ml-1"></i> מדד זה מראה כמה "דלק" (תקציב) ניצלתם החודש.
+                </p>
+            </div>
+
+            <!-- מחווני דלק (Fuel Gauges) – יתרת תקציב לפי קטגוריות -->
+            <div class="section-card">
+                <h2 class="text-xl font-semibold mb-4 text-purple-300">מחווני דלק: תקציב לפי קטגוריות</h2>
+                <div id="category-gauges" class="space-y-4">
+                    <!-- מחווני קטגוריות ירונדרו כאן ע"י JS -->
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> עקבו אחרי "מפלס הדלק" בכל קטגוריה כדי למנוע חריגות.
+                </p>
+            </div>
+
+            <!-- יעדים פיננסיים – "קו הסיום" -->
+            <div class="section-card">
+                <h2 class="text-xl font-semibold mb-4 text-pink-300">יעדים פיננסיים: קו הסיום שלך</h2>
+                <div id="financial-goals" class="space-y-4">
+                    <p class="text-gray-500 text-center py-2" id="no-goals-message">עדיין אין יעדים מוגדרים. <br> <button id="add-goal-btn" class="text-blue-400 hover:underline mt-2">הגדר יעד חדש!</button></p>
+                    <!-- Goals will be rendered here by JS -->
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> הגדירו את "קו הסיום" שלכם. כל צעד קדימה מקרב אתכם לניצחון הפיננסי.
+                </p>
+            </div>
+
+            <!-- הודעות פיט-סטופ (Pit Stop Messages) – התראות והמלצות - הדרכה שוטפת -->
+            <div class="section-card">
+                <h2 class="text-xl font-semibold mb-4 text-yellow-300">הודעות פיט-סטופ</h2>
+                <div id="pit-stop-messages" class="space-y-3">
+                    <!-- הודעות פיט-סטופ ירונדרו כאן ע"י JS -->
+                    <div class="bg-blue-900/30 border border-blue-700/50 p-3 rounded-md flex items-center">
+                        <i class="fas fa-info-circle text-blue-400 ml-2"></i>
+                        <p class="text-sm">ברוך הבא לקוקפיט! הגדר את התקציב שלך כדי להתחיל את המרוץ.</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> כאן תקבלו טיפים, התראות והכוונה ל"פיט-סטופים" פיננסיים.
+                </p>
+            </div>
+        </div>
+
+        <!-- עמודה ימנית (למסכים גדולים) / חלק תחתון (למסכים קטנים) -->
+        <div class="col-span-full lg:col-span-1 flex flex-col gap-4">
+            <!-- מסך ניווט (Navigation Screen) – יומן טרנזקציות - קלט הנתונים המרכזי -->
+            <div class="section-card flex-grow">
+                <h2 class="text-xl font-semibold mb-4 text-green-300">מסך ניווט: יומן טרנזקציות</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <button id="add-expense-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                        <i class="fas fa-minus-circle ml-2"></i> הוסף הוצאה
+                    </button>
+                    <button id="add-income-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                        <i class="fas fa-plus-circle ml-2"></i> הוסף הכנסה
+                    </button>
+                </div>
+                <div id="transactions-list" class="max-h-96 overflow-y-auto custom-scrollbar">
+                    <!-- טרנזקציות ירונדרו כאן ע"י JS -->
+                    <p class="text-gray-500 text-center py-4" id="no-transactions-message">אין טרנזקציות להצגה.</p>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> כאן מתועדות כל ה"הקפות" הפיננסיות שלכם.
+                </p>
+            </div>
+
+            <!-- טבלת זמנים (Lap Times / Leaderboard) – סיכום ביצועים - ניתוח והתקדמות -->
+            <div class="section-card">
+                <h2 class="text-xl font-semibold mb-4 text-orange-300">טבלת זמנים: סיכום ביצועים חודשי</h2>
+                <div id="performance-summary" class="space-y-4">
+                    <div class="flex justify-between items-center text-lg">
+                        <span>הכנסות חודשיות:</span>
+                        <span id="monthly-income" class="text-green-400">0 ש"ח</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg">
+                        <span>הוצאות חודשיות:</span>
+                        <span id="monthly-expenses" class="text-red-400">0 ש"ח</span>
+                    </div>
+                    <div class="progress-bar-container mt-4">
+                        <div id="income-expense-bar" class="h-full rounded-full" style="width: 0%; background-color: #28a745;"></div>
+                    </div>
+                    <p class="text-sm text-gray-400 text-center mt-2" id="income-expense-ratio">הוצאות / הכנסות: 0%</p>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> עקבו אחרי ה"זמנים" שלכם כדי לשפר ביצועים.
+                </p>
+            </div>
+
+            <!-- גיימיפיקציה – "אתגרי מרוץ" -->
+            <div class="section-card">
+                <h2 class="text-xl font-semibold mb-4 text-teal-300">אתגרי מרוץ: צברו נקודות וזכו בתגים!</h2>
+                <div id="gamification-section" class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">נקודות נהג:</span>
+                        <span id="driver-points" class="font-bold text-xl text-yellow-400">0</span>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-md font-semibold text-gray-300 mb-2">התגים שלי:</h3>
+                        <div id="badges-container" class="flex flex-wrap gap-2">
+                            <span class="text-gray-500 text-sm" id="no-badges-message">אין תגים עדיין.</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="text-md font-semibold text-gray-300 mb-2">אתגרים פעילים:</h3>
+                        <div id="active-challenges" class="space-y-2">
+                            <div class="bg-gray-800/50 p-3 rounded-md text-sm text-gray-400">
+                                <i class="fas fa-trophy ml-2 text-yellow-500"></i>
+                                אתגר: "סוף שבוע ללא הוצאות מיותרות" - נסה/י לא לבזבז על בילויים מיותרים בסופ"ש הקרוב!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-3">
+                    <i class="fas fa-info-circle ml-1"></i> הרוויחו "נקודות" על עקביות. אספו "תגים" על השגת יעדים.
+                </p>
+            </div>
+
+            <!-- כפתורי שליטה (Control Buttons) - פעולות מפתח -->
+            <div class="section-card grid grid-cols-2 gap-4">
+                <button id="set-budget-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-sliders-h ml-2"></i> הגדר תקציב <br><span class="text-xs">(שלב 1: בניית הרכב)</span>
+                </button>
+                <button id="driver-profile-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-user-cog ml-2"></i> פרופיל נהג <br><span class="text-xs">(התאמה אישית)</span>
+                </button>
+                <button id="detailed-report-btn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 col-span-2">
+                    <i class="fas fa-file-alt ml-2"></i> דוח מפורט <br><span class="text-xs">(ניתוח מעמיק)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודאל הוספת טרנזקציה -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-6 text-center text-blue-300" id="modal-title">הוסף טרנזקציה</h3>
+            <form id="transaction-form" class="space-y-4">
+                <div>
+                    <label for="transaction-type" class="block text-gray-300 text-sm font-bold mb-2">סוג:</label>
+                    <select id="transaction-type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
+                        <option value="expense">הוצאה</option>
+                        <option value="income">הכנסה</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="transaction-description" class="block text-gray-300 text-sm font-bold mb-2">תיאור:</label>
+                    <input type="text" id="transaction-description" placeholder="קפה בבוקר" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" required>
+                </div>
+                <div>
+                    <label for="transaction-amount" class="block text-gray-300 text-sm font-bold mb-2">סכום:</label>
+                    <input type="number" id="transaction-amount" placeholder="50" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" step="0.01" required>
+                </div>
+                <div>
+                    <label for="transaction-category" class="block text-gray-300 text-sm font-bold mb-2">קטגוריה (להוצאה בלבד):</label>
+                    <select id="transaction-category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white">
+                        <option value="מזון">מזון</option>
+                        <option value="דיור">דיור</option>
+                        <option value="תחבורה">תחבורה</option>
+                        <option value="בילויים">בילויים</option>
+                        <option value="חינוך">חינוך</option>
+                        <option value="בריאות">בריאות</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="transaction-date" class="block text-gray-300 text-sm font-bold mb-2">תאריך:</label>
+                    <input type="date" id="transaction-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" required>
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-check-circle ml-2"></i> שמור טרנזקציה
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- מודאל הגדרת תקציב -->
+    <div id="budget-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-budget-modal-btn">&times;</span>
+            <h3 class="text-2xl font-bold mb-6 text-center text-blue-300">הגדר תקציב חודשי</h3>
+            <p class="text-gray-400 text-center mb-4">
+                <i class="fas fa-map-marked-alt ml-1"></i> הגדר את "מפת המסלול" הפיננסית שלך.
+            </p>
+            <form id="budget-form" class="space-y-4">
+                <div>
+                    <label for="monthly-budget" class="block text-gray-300 text-sm font-bold mb-2">תקציב חודשי כולל:</label>
+                    <input type="number" id="monthly-budget" placeholder="5000" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white" step="0.01" required>
+                </div>
+                <h4 class="text-lg font-semibold mt-4 text-gray-300">תקציב לפי קטגוריות:</h4>
+                <div id="category-budget-inputs" class="space-y-2">
+                    <!-- קלט תקציבי קטגוריות ירונדרו כאן ע"י JS -->
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-save ml-2"></i> שמור תקציב
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- מודאל פרופיל נהג -->
+    <di
